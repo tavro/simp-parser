@@ -1,3 +1,5 @@
+import fs from 'fs';
+
 interface HTMLNode {
   tag: string;
   children: HTMLNode[];
@@ -73,17 +75,23 @@ const generateHTML = (node: HTMLNode, indentationLevel: number = 0): string => {
   return html;
 };
 
-const template = `
-html
-  head
-    title Test test test
-  body
-    h1 Test test
-    p Test
-      div
-        p Test test test test
-    p Test test test test test
-`;
+const inputFile = 'input.txt';
+const outputFile = 'output.html';
 
-const parsedTemplate = parse(template);
-console.log(generateHTML(parsedTemplate));
+fs.readFile(inputFile, 'utf8', (err: any, data: string) => {
+  if (err) {
+    console.error('Error reading input file:', err);
+    return;
+  }
+
+  const parsedTemplate = parse(data);
+  const htmlOutput = generateHTML(parsedTemplate);
+
+  fs.writeFile(outputFile, htmlOutput, 'utf8', (err: any) => {
+    if (err) {
+      console.error('Error writing output file:', err);
+      return;
+    }
+    console.log(`HTML generated and saved to ${outputFile}`);
+  });
+});
