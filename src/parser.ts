@@ -20,9 +20,9 @@ const parse = (input: string): HTMLNode => {
 
     if (lineIndentation === indentation) {
       if (trimmedLine.includes(' ')) {
-        const [tag, text] = trimmedLine.split(' ', 2);
-        node.tag = tag;
-        node.text = text;
+        const splitIndex = trimmedLine.indexOf(' ');
+        node.tag = trimmedLine.slice(0, splitIndex);
+        node.text = trimmedLine.slice(splitIndex + 1);
       } else {
         node.tag = trimmedLine;
       }
@@ -46,13 +46,44 @@ const parse = (input: string): HTMLNode => {
   return parseNode(0);
 };
 
+const generateHTML = (node: HTMLNode, indentationLevel: number = 0): string => {
+  const { tag, children, text } = node;
+  const indent = '  '.repeat(indentationLevel);
+
+  let html = `${indent}<${tag}>`;
+
+  if (text) {
+    html += text;
+  }
+
+  if (children.length > 0) {
+    html += '\n';
+  }
+
+  for (const child of children) {
+    html += generateHTML(child, indentationLevel + 1);
+  }
+
+  if (children.length > 0) {
+    html += indent;
+  }
+
+  html += `</${tag}>\n`;
+
+  return html;
+};
+
 const template = `
 html
   head
-    title Test
+    title Test test test
   body
-    h1 Test
+    h1 Test test
+    p Test
+      div
+        p Test test test test
+    p Test test test test test
 `;
 
 const parsedTemplate = parse(template);
-console.log(parsedTemplate.children);
+console.log(generateHTML(parsedTemplate));
