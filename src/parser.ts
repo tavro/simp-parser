@@ -109,8 +109,8 @@ const generateHTML = (node: HTMLNode, indentationLevel: number = 0): string => {
   return html;
 };
 
-const inputFile = 'input.txt';
-const outputFile = 'output.html';
+const inputFile = './simp/input.simp';
+const outputFile = './output/output.html';
 
 fs.readFile(inputFile, 'utf8', (err: any, data: string) => {
   if (err) {

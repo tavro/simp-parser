@@ -1,0 +1,4 @@
+inotifywait -m -e close_write --format '%w%f' ~/Desktop/simp-parser/simp/ | while read FILE
+do
+    npm start
+done
