@@ -37,7 +37,6 @@ const parse = (input: string): HTMLNode => {
         const endIndex = trimmedLine.indexOf(']');
         const attributes = trimmedLine.slice(startIndex + 1, endIndex);
         node.attributes = attributes.split(',');
-        console.log(node.attributes);
         node.tag = node.tag.slice(0, startIndex);
       }
 
@@ -72,7 +71,7 @@ const parse = (input: string): HTMLNode => {
 };
 
 const generateHTML = (node: HTMLNode, indentationLevel: number = 0): string => {
-  const { tag, children, text, id, className } = node;
+  const { tag, children, text, id, className, attributes } = node;
   const indent = '  '.repeat(indentationLevel);
 
   let html = `${indent}<${tag}`;
@@ -82,6 +81,11 @@ const generateHTML = (node: HTMLNode, indentationLevel: number = 0): string => {
   if(className) {
     html += ` class="${className}"`;
   }
+
+  for(const attribute of attributes || []) {
+    html += ` ${attribute}`;
+  }
+
   html += '>';
 
   if (text) {

@@ -1,9 +1,10 @@
 html
-  head[href="#",src="./"]
+  head
     title Test test test
   body
     h1#testId Test test
+    img[src="./test.png"]
     p Test
       div.testClass
-        p Test test test test
+        a[href="#"] Test test test test
     p Test test test test test
