@@ -4,6 +4,9 @@ interface HTMLNode {
   tag: string;
   children: HTMLNode[];
   text?: string;
+  id?: string;
+  className?: string;
+  attributes?: string[];
 }
 
 const parse = (input: string): HTMLNode => {
@@ -29,6 +32,26 @@ const parse = (input: string): HTMLNode => {
         node.tag = trimmedLine;
       }
 
+      if(node.tag.includes('[')) {
+        const startIndex = trimmedLine.indexOf('[');
+        const endIndex = trimmedLine.indexOf(']');
+        const attributes = trimmedLine.slice(startIndex + 1, endIndex);
+        node.attributes = attributes.split(',');
+        console.log(node.attributes);
+        node.tag = node.tag.slice(0, startIndex);
+      }
+
+      if(node.tag.includes('#')) {
+        const tagSplit = node.tag.split('#');
+        node.tag = tagSplit[0];
+        node.id = tagSplit[1];
+      }
+      else if(node.tag.includes('.')) {
+        const tagSplit = node.tag.split('.');
+        node.tag = tagSplit[0];
+        node.className = tagSplit[1];
+      }
+
       while (lines.length > 0) {
         const nextLine = lines[0];
         const nextLineIndentation = nextLine.length - nextLine.trimStart().length;
@@ -49,10 +72,17 @@ const parse = (input: string): HTMLNode => {
 };
 
 const generateHTML = (node: HTMLNode, indentationLevel: number = 0): string => {
-  const { tag, children, text } = node;
+  const { tag, children, text, id, className } = node;
   const indent = '  '.repeat(indentationLevel);
 
-  let html = `${indent}<${tag}>`;
+  let html = `${indent}<${tag}`;
+  if(id) {
+    html += ` id="${id}"`;
+  }
+  if(className) {
+    html += ` class="${className}"`;
+  }
+  html += '>';
 
   if (text) {
     html += text;
